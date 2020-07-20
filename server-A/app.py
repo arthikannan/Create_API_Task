@@ -25,7 +25,10 @@ def download():
     r = requests.get("http://localhost:5002/parse")
     parsedData = json.loads(r.text)
     
-
+    # Header details
+    col_name = ['Name', 'Party', 'Presidential term', 'President number', 'Ingestion Time']
+    writer.writerow(col_name)
+    
     # Iterate and construct the data
     for data in parsedData:
         writer.writerow([data['Name'], data['Party'], data['Presidential term'], data['President number'], data['Ingestion Time']])
