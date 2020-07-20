@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from flask import send_file
 from flask import make_response
 import requests
@@ -11,11 +11,11 @@ app = Flask(__name__)
 def default():
     return "Server 1!"
 
-@app.route("/home", methods = ["POST","GET"])
+@app.route("/home")
 def home():
     return render_template('home.html')
 
-@app.route("/download")
+@app.route("/download", methods = ['POST','GET'])
 def download():
     # Initialize the csv
     dest = io.StringIO()
@@ -35,6 +35,11 @@ def download():
     output.headers["Content-Disposition"] = "attachment; filename=export.csv"
     output.headers["Content-type"] = "text/csv"
     return output
+
+# Display 404 if Task is Not availabe
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 404)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
